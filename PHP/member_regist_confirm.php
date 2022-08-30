@@ -1,2 +1,90 @@
-<h1>会員情報確認画面</h1>
+<?php
 
+// 都道府県リスト取得
+require_once("./pref_list.php");
+
+// 新しいセッションを開始
+// リクエスト上で GET, POST またはクッキーにより渡された
+// セッション ID に基づき現在のセッションを復帰
+session_start();
+
+// $_SESSIONの中身を確認
+// var_dump($_SESSION);
+
+// セッションで取ってきた中身を変数に代入
+$name_sei = $_SESSION['regist']['name_sei'];
+$name_mei=$_SESSION['regist']['name_mei'];
+$gender=$_SESSION['regist']['gender'];
+$pref_num = $_SESSION['regist']['pref_name']; // 都道府県番号取得
+$pref_name = $pref_list["$pref_num"]; //都道府県リストから都道府県名取得
+$address=$_SESSION['regist']['address'];
+$password=$_SESSION['regist']['password']; //セキュリティ上非表示
+$email=$_SESSION['regist']['email'];
+
+
+// 「登録完了」がクリックされたらmember_regist_end.phpに飛ばす
+if(!empty($_POST["btn_end"])){
+
+    // このファイルをブラウザに返す
+    header('Location: member_regist_end.php'); 
+
+    // 現在のスクリプト終了
+    exit();
+}
+
+?>
+
+<!DOCTYPE>
+<html>
+    <head>
+        <title>会員情報確認画面</title>
+        <link rel="stylesheet" href="../CSS/form.css">
+    </head>
+    <body>
+        <h1>会員情報確認画面</h1>
+        <form action="" method="post">
+            <table>
+                <!-- 氏名フォーム -->
+                <tr>
+                    <td>氏名</td>
+                    <td>姓 <?php echo $name_sei ?> 名 <?php echo $name_mei ?></td>
+                </tr>
+                <!-- 性別選択 -->
+                <tr>
+                    <td>性別</td>
+                    <td>
+                        <?php 
+                        if($gender == 1){
+                            echo "男性";
+                        }elseif($gender == 2){
+                            echo "女性";
+                        }else{
+                            echo "エラー";
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <!-- 住所選択・フォーム -->
+                <tr>
+                    <td>住所</td>
+                    <td><?php echo $pref_name.$address ?></td>
+                </tr>
+                <!-- パスワードフォーム -->
+                <tr>
+                    <td>パスワード</td>
+                    <td>セキュリティのため非表示</td>
+                </tr>
+                <!-- メールアドレスフォーム -->
+                <tr>
+                    <td>メールアドレス</td>
+                    <td><?php echo $email ?></td>
+                </tr>
+            </table>
+            <input type="submit" name="btn_end" value="登録完了">
+
+            <!-- onclickは、ボタンクリック時に実行するJavaScriptを指定するために利用
+            historyオブジェクトはJavaSiptからブラウザの閲覧履歴へアクセスするために利用 -->
+            <button type="button" onclick="history.back()">前に戻る</button>
+        </form>
+    </body>
+</html>
