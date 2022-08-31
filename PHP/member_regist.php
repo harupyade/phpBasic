@@ -236,7 +236,7 @@ var_dump($errors);
                     </td>
                 </tr>
             </table>
-            <input type="submit" name="btn_confirm" value="確認画面へ">
+            <input type="submit" name="btn_confirm" value="確認画面へ"  >
         </form>
     </body>
 </html>
