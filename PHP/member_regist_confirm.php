@@ -7,6 +7,10 @@ require_once("./pref_list.php");
 // リクエスト上で GET, POST またはクッキーにより渡された
 // セッション ID に基づき現在のセッションを復帰
 session_start();
+// セッション使用時にブラウザキャッシュを有効にする
+header('Expires: -1');
+header('Cache-Control:');
+header('Pragma:');
 
 // $_SESSIONの中身を確認
 // var_dump($_SESSION);
