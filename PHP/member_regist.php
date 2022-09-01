@@ -45,11 +45,11 @@ if(!empty($_POST["btn_confirm"])){
     // 住所のバリデーション
 	if( empty($_POST['pref_name']) ) {
 		$errors['pref_name'] = "※都道府県は必須入力です";
-	}elseif( (int)$_POST['pref_name'] < 01 || 47 < (int)$_POST['pref_name'] ) {
-		$errors['pref_name'] = "※都道府県は必須入力です。";
+	}elseif( (int)$_POST['pref_name'] < 1 || 47 < (int)$_POST['pref_name'] ) {
+		$errors['pref_name'] = "※都道府県を正しく入力してください。";
 	}
 
-    if(100 < mb_strlen($data['address']) ) {
+    if(100 < mb_strlen($_POST['address']) ) {
 		$errors['pref_name'] = "※住所は100文字以内で入力してください。";
 	}
 	
@@ -67,9 +67,9 @@ if(!empty($_POST["btn_confirm"])){
     
     if( empty($_POST['password_conf']) ) {
 		$errors['password_conf'] = "※パスワードは必須入力です";
-	}elseif( !preg_match( '/^[0-9a-z]/', $_POST['password']) ) {
+	}elseif( !preg_match( '/^[0-9a-z]/', $_POST['password_conf']) ) {
 		$errors['password_conf'] = "※パスワードは半角英数字で入力してください。";
-	}elseif( 20 < mb_strlen($_POST['password']) || 8 > mb_strlen($_POST['password']) ) {
+	}elseif( 20 < mb_strlen($_POST['password_conf']) || 8 > mb_strlen($_POST['password_conf']) ) {
 		$errors['password_conf'] = "※パスワードは8文字以上20文字以内で入力してください。";
     //}elseif( 8 > mb_strlen($_POST['password']) ) {
 		//$errors['password'] = "※パスワードは8文字以上20文字以内で入力してください。";
