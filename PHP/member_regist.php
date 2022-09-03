@@ -101,8 +101,8 @@ if(!empty($_POST["btn_confirm"])){
 }
 
 // $_SESSIONの中身を確認
-var_dump($_SESSION);
-var_dump($errors);
+//var_dump($_SESSION);
+//var_dump($errors);
 
 ?>
 
@@ -110,9 +110,10 @@ var_dump($errors);
 <html>
     <head>
         <title>会員情報登録フォーム</title>
-        <link rel="stylesheet" href="../CSS/form.css">
+        <link rel="stylesheet" href="./CSS/form.css">
     </head>
     <body>
+    <div class=box >
         <h1>会員情報登録フォーム</h1>
         <form action="" method="post">
             <table>
@@ -236,7 +237,9 @@ var_dump($errors);
                     </td>
                 </tr>
             </table>
-            <input type="submit" name="btn_confirm" value="確認画面へ"  >
+            <input class="btn_blue" type="submit" name="btn_confirm" value="確認画面へ"  >
         </form>
+    </div>
+    <!-- .form_boxここまで -->
     </body>
 </html>

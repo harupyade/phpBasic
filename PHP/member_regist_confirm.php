@@ -45,6 +45,7 @@ if(!empty($_POST["btn_end"])){
         <link rel="stylesheet" href="../CSS/form.css">
     </head>
     <body>
+        <div class=form_box ></div>
         <h1>会員情報確認画面</h1>
         <form action="" method="post">
             <table>

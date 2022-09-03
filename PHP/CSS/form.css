@@ -1,0 +1,28 @@
+.box{
+    background-color:azure;
+    margin:0 auto;;                /* divブロック自体を中央寄せ    */
+    padding:40px;                  /* 上下の幅広め               */
+    text-align:center;             /* ブロック要素(中身)を中央寄せ */
+}
+
+.box form table{
+    margin:0 auto;                 /* table自体を中央寄せ        */
+}
+
+
+.btn_blue {
+    display       : inline-block;
+    border-radius : 5%;          /* 角丸       */
+    font-size     : 16pt;        /* 文字サイズ */
+    text-align    : center;      /* 文字位置   */
+    cursor        : pointer;     /* カーソル   */
+    padding       : 9px 42px;   /* 余白       */
+    background    : #0059b3;     /* 背景色     */
+    color         : #ffffff;     /* 文字色     */
+    line-height   : 1em;         /* 1行の高さ  */
+    opacity       : 1;           /* 透明度     */
+    transition    : .3s;         /* なめらか変化 */
+  }
+  .btn_blue:hover {
+    opacity       : 0.8;         /* カーソル時透明度 */
+  }
