@@ -4,11 +4,14 @@ ini_set('display_errors', 1);
 
 // 都道府県リスト取得
 require_once("./pref_list.php");
+// 関数取得
+require_once("./function.php");
 
 // 新しいセッションを開始
 // リクエスト上で GET, POST またはクッキーにより渡された
 // セッション ID に基づき現在のセッションを復帰
 session_start();
+
 // セッション使用時にブラウザキャッシュを有効にする
 // 下3行がないと、前に戻るボタンでエラーがが発生する
 header('Expires: -1');
@@ -77,6 +80,31 @@ if(!empty($_POST["btn_confirm"])){
         $errors['password_conf']="※確認用パスワードと異なっています。";
     }
 
+    try{
+        // DB接続
+        $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+    
+        // データ挿入
+        $sql = "INSERT INTO members (name_sei,name_mei,gender,pref_name,address,password,email) VALUES(:name_sei,:name_mei,:gender,:pref_name,:address,:password,:email)";
+        $stmt = $dbh->prepare($sql);
+    
+        // データ格納
+        $stmt->bindValue( ':name_sei',$name_sei,PDO::PARAM_STR);
+        $stmt->bindValue( ':name_mei', $name_mei, PDO::PARAM_STR);
+        $stmt->bindValue( ':gender', $gender, PDO::PARAM_INT);
+        $stmt->bindValue( ':pref_name', $pref_name, PDO::PARAM_STR);
+        $stmt->bindValue( ':address', $address, PDO::PARAM_STR);
+        $stmt->bindValue( ':password', $password, PDO::PARAM_STR);
+        $stmt->bindValue( ':email', $email, PDO::PARAM_STR);
+    
+        $stmt -> execute();
+    
+    } catch (PDOException $e) {
+        echo ($e->getMessage());
+        die();
+    }
+
+
 	// メールアドレスのバリデーション
 	if( empty($_POST['email']) ) {
 		$errors['email'] = "※メールアドレスは必須入力です。";
@@ -84,6 +112,8 @@ if(!empty($_POST["btn_confirm"])){
 		$errors['email'] = "※メールアドレスは正しい形式で入力してください。";
 	}elseif( 200 < mb_strlen($_POST['email']) ) {
 		$errors['email'] = "※メールアドレス200文字以内で入力してください。";
+	}elseif(email_exists($_POST['email'])) {
+		$errors['email'] = "※メールアドレスが重複しています。";
 	}
 
 
@@ -113,7 +143,7 @@ if(!empty($_POST["btn_confirm"])){
         <link rel="stylesheet" href="./CSS/form.css">
     </head>
     <body>
-    <div class=box >
+    <div class=box>
         <h1>会員情報登録フォーム</h1>
         <form action="" method="post">
             <table>
@@ -240,6 +270,6 @@ if(!empty($_POST["btn_confirm"])){
             <input class="btn_blue" type="submit" name="btn_confirm" value="確認画面へ"  >
         </form>
     </div>
-    <!-- .form_boxここまで -->
+    <!-- .boxここまで -->
     </body>
 </html>

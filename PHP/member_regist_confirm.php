@@ -7,6 +7,10 @@ require_once("./pref_list.php");
 // リクエスト上で GET, POST またはクッキーにより渡された
 // セッション ID に基づき現在のセッションを復帰
 session_start();
+
+// 二重送信防止用のトークンの代わり
+$_SESSION['token'] = true;
+
 // セッション使用時にブラウザキャッシュを有効にする
 header('Expires: -1');
 header('Cache-Control:');
@@ -14,6 +18,7 @@ header('Pragma:');
 
 // $_SESSIONの中身を確認
 // var_dump($_SESSION);
+// echo $_SESSION['token'];
 
 // セッションで取ってきた中身を変数に代入
 $name_sei = $_SESSION['regist']['name_sei'];
@@ -29,11 +34,47 @@ $email=$_SESSION['regist']['email'];
 // 「登録完了」がクリックされたらmember_regist_end.phpに飛ばす
 if(!empty($_POST["btn_end"])){
 
-    // このファイルをブラウザに返す
-    header('Location: member_regist_end.php'); 
+    session_start();
+    if( !empty($_SESSION['page']) && $_SESSION['page'] === true ) {
 
-    // 現在のスクリプト終了
-    exit();
+		// セッションの削除
+		unset($_SESSION['page']);
+    
+        try{
+            // DB接続
+            $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+        
+            // データ挿入
+            $sql = "INSERT INTO members (name_sei,name_mei,gender,pref_name,address,password,email) VALUES(:name_sei,:name_mei,:gender,:pref_name,:address,:password,:email)";
+            $stmt = $dbh->prepare($sql);
+        
+            // データ格納
+            $stmt->bindValue( ':name_sei',$name_sei,PDO::PARAM_STR);
+            $stmt->bindValue( ':name_mei', $name_mei, PDO::PARAM_STR);
+            $stmt->bindValue( ':gender', $gender, PDO::PARAM_INT);
+            $stmt->bindValue( ':pref_name', $pref_name, PDO::PARAM_STR);
+            $stmt->bindValue( ':address', $address, PDO::PARAM_STR);
+            $stmt->bindValue( ':password', $password, PDO::PARAM_STR);
+            $stmt->bindValue( ':email', $email, PDO::PARAM_STR);
+        
+            $stmt -> execute();
+        
+        } catch (PDOException $e) {
+            echo ($e->getMessage());
+            die();
+        }
+    
+        // このファイルをブラウザに返す
+        header('Location: member_regist_end.php'); 
+    
+        // 現在のスクリプト終了
+        exit();
+
+    } else {
+        echo"ERROR：不正な登録処理です";
+    }
+
+    
 }
 
 ?>
@@ -42,10 +83,11 @@ if(!empty($_POST["btn_end"])){
 <html>
     <head>
         <title>会員情報確認画面</title>
-        <link rel="stylesheet" href="../CSS/form.css">
+        <link rel="stylesheet" href="./CSS/form.css">
     </head>
     <body>
-        <div class=form_box ></div>
+        <p><?php echo $_SESSION['token']  ?></p>
+    <div class=box>
         <h1>会員情報確認画面</h1>
         <form action="" method="post">
             <table>
@@ -85,11 +127,15 @@ if(!empty($_POST["btn_end"])){
                     <td><?php echo $email ?></td>
                 </tr>
             </table>
+            <!-- hidden要素にPOSTするトークンセット -->
+            <input type="hidden" name="token" value="<?php echo $token;?>">
             <input type="submit" name="btn_end" value="登録完了">
 
             <!-- onclickは、ボタンクリック時に実行するJavaScriptを指定するために利用
             historyオブジェクトはJavaSiptからブラウザの閲覧履歴へアクセスするために利用 -->
             <button type="button" onclick="history.back()">前に戻る</button>
         </form>
+    </div>
+    <!-- .boxここまで -->
     </body>
 </html>
