@@ -86,8 +86,7 @@ if(!empty($_POST["btn_end"])){
         <link rel="stylesheet" href="./CSS/form.css">
     </head>
     <body>
-        <p><?php echo $_SESSION['token']  ?></p>
-    <div class=box>
+    <div class="box">
         <h1>会員情報確認画面</h1>
         <form action="" method="post">
             <table>
@@ -128,7 +127,7 @@ if(!empty($_POST["btn_end"])){
                 </tr>
             </table>
             <!-- hidden要素にPOSTするトークンセット -->
-            <input type="hidden" name="token" value="<?php echo $token;?>">
+            <input type="hidden" name="token"?>">
             <input type="submit" name="btn_end" value="登録完了">
 
             <!-- onclickは、ボタンクリック時に実行するJavaScriptを指定するために利用

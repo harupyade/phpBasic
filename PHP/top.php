@@ -23,6 +23,7 @@ session_start();
                     <p>ようこそ <?php echo $_SESSION["member"]["name_sei"]." ".$_SESSION["member"]["name_mei"] ?> 様</p>
                 </div>
                 <div class="right_column">
+                    <input class="button" type="button" onclick="location.href='./thread_regist.php'"value="新規スレッド作成">
                     <input class="button" type="button" onclick="location.href='./logout.php'"value="ログアウト">
                 </div>
             </div>
