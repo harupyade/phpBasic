@@ -21,24 +21,24 @@ header('Pragma:');
 // echo $_SESSION['token'];
 
 // セッションで取ってきた中身を変数に代入
-$name_sei = $_SESSION['regist']['name_sei'];
-$name_mei=$_SESSION['regist']['name_mei'];
-$gender=$_SESSION['regist']['gender'];
-$pref_num = $_SESSION['regist']['pref_name']; // 都道府県番号取得
+$name_sei = $_SESSION['member']['name_sei'];
+$name_mei=$_SESSION['member']['name_mei'];
+$gender=$_SESSION['member']['gender'];
+$pref_num = $_SESSION['member']['pref_name']; // 都道府県番号取得
 $pref_name = $pref_list["$pref_num"]; //都道府県リストから都道府県名取得
-$address=$_SESSION['regist']['address'];
-$password=$_SESSION['regist']['password']; //セキュリティ上非表示
-$email=$_SESSION['regist']['email'];
+$address=$_SESSION['member']['address'];
+$password=$_SESSION['member']['password']; //セキュリティ上非表示
+$email=$_SESSION['member']['email'];
 
 
 // 「登録完了」がクリックされたらmember_regist_end.phpに飛ばす
 if(!empty($_POST["btn_end"])){
 
     session_start();
-    if( !empty($_SESSION['page']) && $_SESSION['page'] === true ) {
+    if( !empty($_SESSION['token']) && $_SESSION['token'] === true ) {
 
 		// セッションの削除
-		unset($_SESSION['page']);
+		unset($_SESSION['token']);
     
         try{
             // DB接続

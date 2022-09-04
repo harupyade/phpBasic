@@ -1,8 +1,28 @@
+.header{
+    background-color: antiquewhite;
+    height:50px;
+	width:100%;
+	padding:20px;
+}
+
+.left_column{
+    float:left;
+    display: inline-block;
+}
+
+.right_column{
+    float:right;
+    display: inline-block;
+}
+
+
 .box{
     background-color:azure;
-    margin:0 auto;;                /* divブロック自体を中央寄せ    */
+    margin:0 auto;                 /* divブロック自体を中央寄せ    */
     padding:40px;                  /* 上下の幅広め               */
     text-align:center;             /* ブロック要素(中身)を中央寄せ */
+    width:100%;
+	padding:20px;
 }
 
 .box form table{

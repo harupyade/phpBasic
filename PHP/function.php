@@ -1,7 +1,7 @@
 <?php
 
-   //メールアドレスの重複確認
-   function email_exists($email){
+   //メールアドレスの存在確認
+   function emailExists($email){
     // DB接続
     $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
 	// SQL
@@ -19,6 +19,20 @@
 	}else{
 		return FALSE;
 	}
-}
+
+    }
+
+    // 会員情報取り出し
+    function memberInfo($email){
+        // DB接続
+        $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+        // SQL
+        $sql = "SELECT * FROM members WHERE email = :email";
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':email', $email,PDO::PARAM_STR);
+        $stmt->execute();
+        $get_data = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $get_data;
+    }
 
 ?>
