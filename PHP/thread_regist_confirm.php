@@ -47,7 +47,7 @@ if(!empty($_POST["btn_end"])){
         }
 
         // このファイルをブラウザに返す
-        header('Location: top.php'); 
+        header('Location: thread.php'); 
     
         // 現在のスクリプト終了
         exit();
@@ -61,7 +61,7 @@ if(!empty($_POST["btn_end"])){
 // エラー表示
 ini_set('display_errors', 1);
 
-var_dump($_SESSION);
+// var_dump($_SESSION);
 
 ?>
 

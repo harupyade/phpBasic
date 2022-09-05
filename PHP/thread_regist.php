@@ -65,7 +65,7 @@ var_dump($_SESSION);
         <link rel="stylesheet" href="./CSS/form.css">
     </head>
     <body>
-    <div class=box>
+    <div class="box">
         <h1>スレッド作成フォーム</h1>
         <form action="" method="post">
             <table>

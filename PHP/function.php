@@ -35,4 +35,26 @@
         return $get_data;
     }
 
+    // スレッド検索機能
+    function search($btn,$search){
+        $get_data = [];
+        // DB接続
+        $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+
+        // もし検索ボタンが押されてなければ
+        if(!empty($btn)){
+            // SQL
+            $sql = "SELECT * FROM threads WHERE CONCAT(title, content) LIKE :search ORDER BY created_at DESC";
+            $stmt = $dbh->prepare($sql); // bundValueの前に入れないとエラーになる。
+            $stmt->bindValue(':search','%'.$search.'%',PDO::PARAM_STR);
+        }else{
+            $sql = "SELECT * FROM threads ORDER BY created_at DESC";
+            $stmt = $dbh->prepare($sql);
+        }
+        $stmt->execute();
+        $get_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $get_data;
+    }
+
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-echo ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 
 // 都道府県リスト取得
 require_once("./pref_list.php");
