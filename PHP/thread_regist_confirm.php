@@ -8,7 +8,6 @@ ini_set('display_errors', 1);
 // リクエスト上で GET, POST またはクッキーにより渡された
 // セッション ID に基づき現在のセッションを復帰
 session_start();
-
 // 二重送信防止用のトークンの代わり
 $_SESSION['token'] = true;
 
@@ -23,6 +22,7 @@ $content = $_SESSION['thread']['content'];
 
 if(!empty($_POST["btn_end"])){
     session_start();
+
     if( !empty($_SESSION['token'] && $_SESSION['token'] === true )){
         // セッションの削除
 		unset($_SESSION['token']);
