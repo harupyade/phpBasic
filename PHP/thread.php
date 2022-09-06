@@ -44,7 +44,7 @@ $get_data = search($_POST['btn_search'],$_POST['search']);
             <?php foreach($get_data as $data): ?>
             <tr>
                 <td>ID:<?php echo $data["id"] ?></td>
-                <td><?php echo $data["title"] ?></td>
+                <td><a href="thread_detail.php?id=<?php echo $data["id"] ?>"><?php echo $data["title"] ?></a></td>
                 <td><?php echo date('Y.m.d H:i',strtotime($data["created_at"])) ?></td>
             </tr>
             <?php endforeach ?>
