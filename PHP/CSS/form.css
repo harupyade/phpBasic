@@ -1,3 +1,9 @@
+/* table自体を中央寄せ*/
+table{
+    margin:0 auto;                 /* table自体を中央寄せ        */
+    text-align: center;
+}
+
 .header{
     background-color: antiquewhite;
     height:50px;
@@ -25,11 +31,6 @@
 	padding:20px;
 }
 
-.box form table{
-    margin:0 auto;                 /* table自体を中央寄せ        */
-}
-
-
 .btn_blue {
     display       : inline-block;
     border-radius : 5%;          /* 角丸       */
@@ -46,3 +47,20 @@
   .btn_blue:hover {
     opacity       : 0.8;         /* カーソル時透明度 */
   }
+
+/* 前へ・次へがあるものに適用 */
+.prev{ 
+    background-color: gainsboro;
+    height:50px;
+    margin:20px;
+    padding:5px;
+}
+
+.box_blue{
+    margin: 2em auto;
+    padding: 1em;
+    width: 600px;
+    border: 1px solid #a9a9a9;
+    background-color: #fff;
+    box-shadow: 1.5px 1.5px 2px #696969;
+}
