@@ -57,4 +57,31 @@
         return $get_data;
     }
 
+    // いいねの回数カウント機能
+    function likeCount($comment_id){
+        // DB接続
+        $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+        // SQL
+        $sql = "SELECT COUNT(*) AS like_count FROM likes WHERE comment_id = :comment_id";
+        $stmt = $dbh->prepare($sql);
+        $stmt -> bindValue(':comment_id', $comment_id,PDO::PARAM_INT);
+        $stmt->execute();
+        $get_data = $stmt->fetch();
+        return $get_data;
+    }
+
+    // 自分がいいねしているかどうかの判別機能
+    function likeMemberGet($comment_id,$member_id){
+        // DB接続
+        $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+        // SQL
+        $sql = "SELECT id FROM likes WHERE comment_id = :comment_id AND member_id = :member_id";
+        $stmt = $dbh->prepare($sql);
+        $stmt -> bindValue(':comment_id', $comment_id,PDO::PARAM_INT);
+        $stmt -> bindValue(':member_id', $member_id,PDO::PARAM_INT);
+        $stmt->execute();
+        $get_data = $stmt->fetch();
+        return $get_data;
+    }
+
 ?>

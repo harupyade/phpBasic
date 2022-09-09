@@ -1,4 +1,10 @@
 <?php
+
+echo ini_set('display_errors', 1);
+
+// 関数取得
+require_once("./function.php");
+
 session_start();
 // 二重送信防止用のトークンの代わり
 $_SESSION['token'] = true;
@@ -98,11 +104,62 @@ if (!empty($_POST["btn_comment"])) {
     }
 }
 
+// いいね登録・削除機能
+if (!empty($_POST["like_on"])) {
+    if (empty($_SESSION["member"]["id"])) {
+        header("Location:member_regist.php");
+    } else {
+        // $_SESSIONに$_POSTで取得した情報追加
+        $_SESSION["like"] = $_POST;
+        $comment_id = $_SESSION["like"]["comment_id"];
+        try {
+            // データ挿入
+            $sql_like_on = "INSERT INTO likes (member_id,comment_id) VALUES(:member_id,:comment_id)";
+            $stmt_like_on = $dbh->prepare($sql_like_on);
+
+            // データ格納
+            $stmt_like_on->bindValue(':member_id', $member_id, PDO::PARAM_INT);
+            $stmt_like_on->bindValue(':comment_id', $comment_id, PDO::PARAM_INT);
+
+            $stmt_like_on->execute();
+        } catch (PDOException $e) {
+            echo ($e->getMessage());
+            die();
+        }
+        header("Location:thread_detail.php?id=" . $thread_id . "&page=" . $now_page);
+        exit();
+    }
+}
+if (!empty($_POST["like_off"])) {
+    // $_SESSIONに$_POSTで取得した情報追加
+    $_SESSION["like"] = $_POST;
+    $comment_id = $_SESSION["like"]["comment_id"];
+    try {
+        // データ挿入
+        $sql_like_off = "DELETE FROM likes WHERE comment_id = :comment_id AND member_id = :member_id";
+        $stmt_like_off = $dbh->prepare($sql_like_off);
+
+        // データ格納
+        $stmt_like_off->bindValue(':member_id', $member_id, PDO::PARAM_INT);
+        $stmt_like_off->bindValue(':comment_id', $comment_id, PDO::PARAM_INT);
+
+        $stmt_like_off->execute();
+    } catch (PDOException $e) {
+        echo ($e->getMessage());
+        die();
+    }
+    header("Location:thread_detail.php?id=" . $thread_id . "&page=" . $now_page);
+    exit();
+}
+
+
+
 // $_SESSIONの中身を確認
-var_dump($_SESSION);
+//var_dump($_SESSION);
 // var_dump($thread);
-var_dump($comments);
-echo count($comments);
+// var_dump($comments_data);
+// var_dump($_POST); POSTの中身は出てこない
+// echo count($comments);
 ?>
 
 <!DOCTYPE>
@@ -111,6 +168,7 @@ echo count($comments);
 <head>
     <title>スレッド詳細</title>
     <link rel="stylesheet" href="./CSS/form.css">
+    <script src="https://kit.fontawesome.com/88a524cdd2.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -160,16 +218,49 @@ echo count($comments);
                     <tbody>
                         <tr>
                             <td><?php echo $comment["id"] . ". " . $comment["name_sei"] . " " . $comment["name_mei"] . "   " . date('Y.m.d H:i', strtotime($comment["created_at"])) ?></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td><?php echo $comment["comment"] ?></td>
+                            <td>
+                                <!-- いいね機能 -->
+                                <form action="" method="post">
+                                    <input type="hidden" name="comment_id" value="<?php echo $comment["id"] ?>">
+                                    <?php if ((likeMemberGet($comment["id"], $_SESSION["member"]["id"]))) : ?>
+                                        <input type="submit" name="like_off" value="&#xf004;" class="fa-solid" style="color:red; background-color: transparent; outline: none; border:none; font-size:15px;">
+                                        <!-- クラスを変えると、中の色ありなしを変更可能 -->
+                                    <?php else : ?>
+                                        <input type="submit" name="like_on" value="&#xf004;" class="fa-regular" style="background-color: transparent; outline: none; border:none; font-size:15px;">
+                                    <?php endif ?>
+                                </form>
+                                <!-- いいね機能ここまで -->
+                            </td>
+                            <td><?php echo likeCount($comment["id"])["like_count"] ?></td>
                         </tr>
                     </tbody>
                 <?php endforeach ?>
             </table>
         </div>
         <div class="prev">
-
+            <div class="left_column">
+                <?php if ($now_page > 0) : ?>
+                    <a href="<?php echo "thread_detail.php?id=" . $thread_id . "&page=" . ($now_page - 1) ?>">
+                        <p>＜前へ</p>
+                    </a>
+                <?php else : ?>
+                    <p>＜前へ</p>
+                <?php endif ?>
+            </div>
+            <div class="right_column">
+                <?php if ($now_page < $comment_maxpage - 1) : ?>
+                    <a href="<?php echo "thread_detail.php?id=" . $thread_id . "&page=" . ($now_page + 1) ?>">
+                        <p>次へ＞</p>
+                    </a>
+                <?php else : ?>
+                    <p>次へ＞</p>
+                <?php endif ?>
+            </div>
         </div>
         <?php if (!empty($_SESSION)) : ?>
             <form action="" method="post">
