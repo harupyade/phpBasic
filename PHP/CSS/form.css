@@ -1,66 +1,78 @@
 /* table自体を中央寄せ*/
-table{
-    margin:0 auto;                 /* table自体を中央寄せ        */
-    text-align: center;
+table {
+  margin: 0 auto; /* table自体を中央寄せ        */
+  text-align: center;
 }
 
-.header,.footer{
-    background-color: antiquewhite;
-    height:50px;
-	width:100%;
-	padding:20px;
+.header,
+.footer {
+  background-color: antiquewhite;
+  height: 50px;
+  width: 100%;
+  padding: 20px;
 }
 
-.left_column{
-    float:left;
+.admin_header {
+  background-color: #a9a9a9;
+  height: 50px;
+  width: 100%;
+  padding: 20px;
+}
+
+.left_column {
+  float: left;
+  display: inline-block;
+}
+
+.right_column {
+  float: right;
+  display: inline-block;
+}
+
+.friend{
     display: inline-block;
+    margin-left: 50px;
 }
 
-.right_column{
-    float:right;
-    display: inline-block;
-}
-
-
-.box{
-    background-color:azure;
-    margin:0 auto;                 /* divブロック自体を中央寄せ    */
-    padding:40px;                  /* 上下の幅広め               */
-    text-align:center;             /* ブロック要素(中身)を中央寄せ */
-    width:100%;
-	padding:20px;
+.box {
+  background-color: azure;
+  margin: 0 auto; /* divブロック自体を中央寄せ    */
+  padding: 40px; /* 上下の幅広め               */
+  text-align: center; /* ブロック要素(中身)を中央寄せ */
+  width: 100%;
+  padding: 20px;
 }
 
 .btn_blue {
-    display       : inline-block;
-    border-radius : 5%;          /* 角丸       */
-    font-size     : 16pt;        /* 文字サイズ */
-    text-align    : center;      /* 文字位置   */
-    cursor        : pointer;     /* カーソル   */
-    padding       : 9px 42px;   /* 余白       */
-    background    : #0059b3;     /* 背景色     */
-    color         : #ffffff;     /* 文字色     */
-    line-height   : 1em;         /* 1行の高さ  */
-    opacity       : 1;           /* 透明度     */
-    transition    : .3s;         /* なめらか変化 */
-  }
-  .btn_blue:hover {
-    opacity       : 0.8;         /* カーソル時透明度 */
-  }
-
-/* 前へ・次へがあるものに適用 */
-.prev{ 
-    background-color: gainsboro;
-    height:50px;
-    margin:20px;
-    padding:5px;
+  display: inline-block;
+  border-radius: 5%; /* 角丸       */
+  font-size: 16pt; /* 文字サイズ */
+  text-align: center; /* 文字位置   */
+  cursor: pointer; /* カーソル   */
+  padding: 9px 42px; /* 余白       */
+  background: #0059b3; /* 背景色     */
+  color: #ffffff; /* 文字色     */
+  line-height: 1em; /* 1行の高さ  */
+  opacity: 1; /* 透明度     */
+  transition: 0.3s; /* なめらか変化 */
+}
+.btn_blue:hover {
+  opacity: 0.8; /* カーソル時透明度 */
 }
 
-.box_blue{
-    margin: 2em auto;
-    padding: 1em;
-    width: 600px;
-    border: 1px solid #a9a9a9;
-    background-color: #fff;
-    box-shadow: 1.5px 1.5px 2px #696969;
+/* 前へ・次へがあるものに適用 */
+.prev {
+  background-color: gainsboro;
+  height: 50px;
+  margin: 20px;
+  padding: 5px;
+}
+
+.box_blue {
+  margin: 2em auto;
+  padding: 1em;
+  width: 600px;
+  border: 1px solid #a9a9a9;
+  background-color: #fff;
+  box-shadow: 1.5px 1.5px 2px #696969;
 }

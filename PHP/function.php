@@ -45,9 +45,9 @@ function memberWithdrawal($id)
     $sql = "UPDATE members SET deleted_at = CURRENT_TIMESTAMP WHERE id=:id";
     $stmt = $dbh->prepare($sql);
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-    if($stmt->execute()){
+    if ($stmt->execute()) {
         return TRUE;
-    }else{
+    } else {
         return FALSE;
     }
 }
