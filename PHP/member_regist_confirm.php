@@ -45,7 +45,7 @@ if(!empty($_POST["btn_end"])){
             $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
         
             // データ挿入
-            $sql = "INSERT INTO members (name_sei,name_mei,gender,pref_name,address,password,email) VALUES(:name_sei,:name_mei,:gender,:pref_name,:address,:password,:email)";
+            $sql = "INSERT INTO members (name_sei,name_mei,gender,pref_name,address,password,email,created_at) VALUES(:name_sei,:name_mei,:gender,:pref_name,:address,:password,:email,CURRENT_TIMESTAMP)";
             $stmt = $dbh->prepare($sql);
         
             // データ格納
@@ -127,7 +127,7 @@ if(!empty($_POST["btn_end"])){
                 </tr>
             </table>
             <!-- hidden要素にPOSTするトークンセット -->
-            <input type="hidden" name="token"?>">
+            <input type="hidden" name="token">
             <input type="submit" name="btn_end" value="登録完了">
 
             <!-- onclickは、ボタンクリック時に実行するJavaScriptを指定するために利用

@@ -1,10 +1,8 @@
 <?php
 
 echo ini_set('display_errors', 1);
-
 // 関数取得
 require_once("./function.php");
-
 session_start();
 // 二重送信防止用のトークンの代わり
 $_SESSION['token'] = true;

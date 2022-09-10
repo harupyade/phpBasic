@@ -4,7 +4,7 @@ table{
     text-align: center;
 }
 
-.header{
+.header,.footer{
     background-color: antiquewhite;
     height:50px;
 	width:100%;
