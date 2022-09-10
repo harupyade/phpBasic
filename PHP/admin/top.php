@@ -24,9 +24,7 @@ session_start();
             </div>
         </div>
         <div class="box">
-            <p>
-                <font size="7">PHP掲示板</font>
-            </p>
+            <input class="button" type="button" onclick="location.href='./member.php'" value="会員一覧">
         </div>
         <div class="admin_header">
 
@@ -38,7 +36,9 @@ session_start();
             </div>
         </div>
         <div class="box">
-
+            <p>
+                <font size="7">PHP掲示板</font>
+            </p>
         </div>
         <div class="admin_header">
 

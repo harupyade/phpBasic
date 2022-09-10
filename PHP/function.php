@@ -3,14 +3,15 @@ require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 // DB接続
-function dbConnect(){
-    $dsn = 'mysql:dbname=harupyade_test;host='.$_ENV['db_host'].';';
+function dbConnect()
+{
+    $dsn = 'mysql:dbname=harupyade_test;host=' . $_ENV['db_host'] . ';';
     $user = $_ENV['db_user'];
     $password = $_ENV['db_pass'];
-    try{
-        $dbh = new PDO($dsn,$user,$password);
+    try {
+        $dbh = new PDO($dsn, $user, $password);
         return $dbh;
-    }catch (PDOException $e) {
+    } catch (PDOException $e) {
         echo "接続失敗: " . $e->getMessage() . "\n";
         exit();
     }
@@ -117,5 +118,66 @@ function likeMemberGet($comment_id, $member_id)
     $stmt->bindValue(':member_id', $member_id, PDO::PARAM_INT);
     $stmt->execute();
     $get_data = $stmt->fetch();
+    return $get_data;
+}
+
+// 会員一覧取得
+function memberDataGet()
+{
+    // DB接続
+    $dbh = dbConnect();
+    // SQL
+    $sql = "SELECT * FROM members";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $get_data = $stmt->fetchAll();
+    return $get_data;
+}
+
+// 会員検索
+function memberDataGetSearch($id,$gender,$pref_name,$free_word)
+{
+    // DB接続
+    $dbh = dbConnect();
+    // SQL
+    if(!empty($id) || !empty($gender) || !empty($pref_name) || !empty($free_word)){
+        $sql = "SELECT * FROM members";
+        if(!empty($id)){
+            $sql.= " WHERE id=:id";
+        }
+        if(empty($id) && !empty($gender)){
+            $sql.=" WHERE gender=:gender";
+        }elseif(!empty($gender)){
+            $sql.=" AND gender=:gender";
+        }
+        if(empty($id) && empty($gender) && !empty($pref_name)&& $pref_name != "選択してください"){
+            $sql.=" WHERE pref_name=:pref_name";
+        }elseif(!empty($pref_name)&& $pref_name != "選択してください"){
+            $sql .= " AND pref_name=:pref_name";
+        }
+        if(empty($id) && empty($gender) && $pref_name == "選択してください" && !empty($free_word)){
+            $sql.=" WHERE (name_sei=:free_word OR name_mei=:free_word OR email=:free_word)";
+        }elseif(!empty($free_word)){
+            $sql.=" AND (name_sei=:free_word OR name_mei=:free_word OR email=:free_word)";
+        }
+    }
+    
+    $stmt = $dbh->prepare($sql);
+
+    if(!empty($id)){
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    }
+    if(!empty($gender)){
+        $stmt->bindValue(':gender', $gender, PDO::PARAM_INT);
+    }
+    if(!empty($pref_name) && $pref_name != "選択してください"){
+        $stmt->bindValue(':pref_name', $pref_name, PDO::PARAM_STR);
+    }
+    if(!empty($free_word)){
+        $stmt->bindValue(':free_word', $free_word, PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    $get_data = $stmt->fetchAll();
     return $get_data;
 }
