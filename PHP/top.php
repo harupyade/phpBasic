@@ -1,14 +1,12 @@
 <?php
-
+echo ini_set('display_errors', 1);
 session_start();
 //session_unset();
 
+// 関数取得
+require_once("./function.php");
 // $_SESSIONの中身を確認
 //var_dump($_SESSION);
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-//echo $_ENV["db_name"];
 ?>
 
 <!DOCTYPE>

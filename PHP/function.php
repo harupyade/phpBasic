@@ -2,12 +2,25 @@
 require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
+// DB接続
+function dbConnect(){
+    $dsn = 'mysql:dbname=harupyade_test;host='.$_ENV['db_host'].';';
+    $user = $_ENV['db_user'];
+    $password = $_ENV['db_pass'];
+    try{
+        $dbh = new PDO($dsn,$user,$password);
+        return $dbh;
+    }catch (PDOException $e) {
+        echo "接続失敗: " . $e->getMessage() . "\n";
+        exit();
+    }
+}
 
 //メールアドレスの存在確認 & ソフトデリートされていない会員
 function emailExists($email)
 {
     // DB接続
-    $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+    $dbh = dbConnect();
     // SQL
     $sql = "SELECT COUNT(id) FROM members WHERE email = :email AND deleted_at IS NULL";
     $stmt = $dbh->prepare($sql);
@@ -29,7 +42,7 @@ function emailExists($email)
 function memberInfo($email)
 {
     // DB接続
-    $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+    $dbh = dbConnect();
     // SQL
     $sql = "SELECT * FROM members WHERE email = :email";
     $stmt = $dbh->prepare($sql);
@@ -43,7 +56,7 @@ function memberInfo($email)
 function memberWithdrawal($id)
 {
     // DB接続
-    $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+    $dbh = dbConnect();
     // SQL
     $sql = "UPDATE members SET deleted_at = CURRENT_TIMESTAMP WHERE id=:id";
     $stmt = $dbh->prepare($sql);
@@ -60,7 +73,7 @@ function search($btn, $search)
 {
     $get_data = [];
     // DB接続
-    $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+    $dbh = dbConnect();
 
     // もし検索ボタンが押されてなければ
     if (!empty($btn)) {
@@ -82,7 +95,7 @@ function search($btn, $search)
 function likeCount($comment_id)
 {
     // DB接続
-    $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+    $dbh = dbConnect();
     // SQL
     $sql = "SELECT COUNT(*) AS like_count FROM likes WHERE comment_id = :comment_id";
     $stmt = $dbh->prepare($sql);
@@ -96,7 +109,7 @@ function likeCount($comment_id)
 function likeMemberGet($comment_id, $member_id)
 {
     // DB接続
-    $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+    $dbh = dbConnect();
     // SQL
     $sql = "SELECT id FROM likes WHERE comment_id = :comment_id AND member_id = :member_id";
     $stmt = $dbh->prepare($sql);

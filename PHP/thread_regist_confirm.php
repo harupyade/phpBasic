@@ -1,10 +1,9 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 // エラー表示
 ini_set('display_errors', 1);
 
+// 関数取得
+require_once("./function.php");
 
 // 新しいセッションを開始
 // リクエスト上で GET, POST またはクッキーにより渡された
@@ -31,7 +30,7 @@ if(!empty($_POST["btn_end"])){
 
         try{
             // DB接続
-            $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+            $dbh = dbConnect();
         
             // データ挿入
             $sql = "INSERT INTO threads (member_id,title,content) VALUES(:member_id,:title,:content)";
@@ -63,7 +62,7 @@ if(!empty($_POST["btn_end"])){
 // エラー表示
 ini_set('display_errors', 1);
 
-// var_dump($_SESSION);
+var_dump($_SESSION);
 
 ?>
 

@@ -1,9 +1,5 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
-echo ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 
 // 関数取得
 require_once("./function.php");
@@ -22,36 +18,35 @@ header('Pragma:');
 // 会員情報取得
 $member_data = memberInfo($_POST['email']);
 
-if(!empty($_POST["btn_confirm"])){
+if (!empty($_POST["btn_confirm"])) {
 
     // エラーの初期値
     $errors = array();
 
     // メールアドレスのバリデーション
-    if( empty($_POST['email'])){
+    if (empty($_POST['email'])) {
         $errors['email'] = "※メールアドレスは必須入力です。";
-    }elseif(!emailExists($_POST['email'])) {
-		$errors['email'] = "※メールアドレスが存在しません。";
-	}
+    } elseif (!emailExists($_POST['email'])) {
+        $errors['email'] = "※メールアドレスが存在しません。";
+    }
 
     // パスワードのバリデーション
-    if( empty($_POST['password']) ) {
-		$errors['password'] = "※パスワードは必須入力です";
-	}elseif($member_data["password"] !== $_POST['password']){
+    if (empty($_POST['password'])) {
+        $errors['password'] = "※パスワードは必須入力です";
+    } elseif ($member_data["password"] !== $_POST['password']) {
         $errors['password'] = "※パスワードが一致しません。";
     }
 
-    if(empty($errors)){
+    if (empty($errors)) {
         // $_SESSIONに$_POSTで取得した情報追加(ログインした人の情報取得)
-        $_SESSION["member"] = $member_data; 
+        $_SESSION["member"] = $member_data;
 
         // このファイルをブラウザに返す
-        header('Location: top.php'); 
+        header('Location: top.php');
 
         // 現在のスクリプト終了
         exit();
     }
-
 }
 
 
@@ -60,11 +55,13 @@ if(!empty($_POST["btn_confirm"])){
 
 <!DOCTYPE>
 <html>
-    <head>
-        <title>ログインフォーム</title>
-        <link rel="stylesheet" href="./CSS/form.css">
-    </head>
-    <body>
+
+<head>
+    <title>ログインフォーム</title>
+    <link rel="stylesheet" href="./CSS/form.css">
+</head>
+
+<body>
     <div class="box">
         <h1>ログイン</h1>
         <form action="" method="post">
@@ -72,37 +69,40 @@ if(!empty($_POST["btn_confirm"])){
                 <!-- メールアドレス -->
                 <tr>
                     <td>メールアドレス(ID)</td>
-                    <td><input type="text" name="email" value="<?php if( !empty($_POST['email']) ){ echo $_POST['email']; } ?>"></td>
+                    <td><input type="text" name="email" value="<?php if (!empty($_POST['email'])) {
+                                                                    echo $_POST['email'];
+                                                                } ?>"></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td style="color:red">
-                        <?php 
-                            if(!empty($errors["email"])){
-                                echo $errors['email'];
-                            }
+                        <?php
+                        if (!empty($errors["email"])) {
+                            echo $errors['email'];
+                        }
                         ?>
                     </td>
                 </tr>
                 <tr>
                     <td>パスワード</td>
-                    <td><input type="password" name="password" ></td>
+                    <td><input type="password" name="password"></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td style="color:red">
-                        <?php 
-                            if(!empty($errors["password"])){
-                                echo $errors['password'];
-                            }
+                        <?php
+                        if (!empty($errors["password"])) {
+                            echo $errors['password'];
+                        }
                         ?>
                     </td>
                 </tr>
             </table>
-            <input class="btn_blue" type="submit" name="btn_confirm" value="ログイン"  >
-            <input class="btn_blue" type="button" onclick="location.href='./top.php'"value="トップに戻る">
+            <input class="btn_blue" type="submit" name="btn_confirm" value="ログイン">
+            <input class="btn_blue" type="button" onclick="location.href='./top.php'" value="トップに戻る">
         </form>
     </div>
     <!-- .boxここまで -->
-    </body>
+</body>
+
 </html>

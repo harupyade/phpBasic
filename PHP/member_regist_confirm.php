@@ -1,9 +1,8 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 // 都道府県リスト取得
 require_once("./pref_list.php");
+// 関数取得
+require_once("./function.php");
 
 // 新しいセッションを開始
 // リクエスト上で GET, POST またはクッキーにより渡された
@@ -44,7 +43,7 @@ if(!empty($_POST["btn_end"])){
     
         try{
             // DB接続
-            $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+            $dbh = dbConnect();
         
             // データ挿入
             $sql = "INSERT INTO members (name_sei,name_mei,gender,pref_name,address,password,email,created_at) VALUES(:name_sei,:name_mei,:gender,:pref_name,:address,:password,:email,CURRENT_TIMESTAMP)";

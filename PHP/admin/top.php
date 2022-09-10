@@ -1,8 +1,4 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
 session_start();
 
 //var_dump($_SESSION);
@@ -38,7 +34,7 @@ session_start();
     <?php else : ?>
         <div class="admin_header">
             <div class="right_column">
-                <input class="button" type="button" onclick="location.href='login.php'" value="ログイン">
+                <input class="button" type="button" onclick="location.href='./login.php'" value="ログイン">
             </div>
         </div>
         <div class="box">

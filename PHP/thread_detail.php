@@ -1,7 +1,4 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 echo ini_set('display_errors', 1);
 // 関数取得
 require_once("./function.php");
@@ -16,7 +13,7 @@ if (isset($_GET['id'])) {
 $member_id = $_SESSION["member"]["id"];
 
 // DB接続
-$dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+$dbh = dbConnect();
 
 // SQL系のエラー表示
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

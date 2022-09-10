@@ -1,7 +1,4 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 // 関数取得
 require_once("./function.php");
 
@@ -13,6 +10,7 @@ session_start();
 ini_set('display_errors', 1);
 
 $get_data = search($_POST['btn_search'],$_POST['search']);
+
 
 // $_SESSIONの中身を確認
 //var_dump($_SESSION);

@@ -1,9 +1,9 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
-echo ini_set('display_errors', 1);
+// 関数取得
+require_once("../function.php");
+
+ini_set('display_errors', 1);
 
 session_start();
 
@@ -14,7 +14,7 @@ if (!empty($_POST["btn_confirm"])) {
     $login_id = $_POST["login_id"];
 
     // DB接続
-    $dbh = new PDO('mysql:dbname=harupyade_test;host=mysql57.harupyade.sakura.ne.jp;charset=utf8', 'harupyade', 'ztrdx_aj4f8ret');
+    $dbh = dbConnect();
     // SQL
     $sql = "SELECT * FROM administers WHERE login_id = :login_id AND deleted_at IS NULL";
     $stmt = $dbh->prepare($sql);
