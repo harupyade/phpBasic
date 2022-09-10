@@ -1,5 +1,7 @@
 <?php
-
+require __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 // エラー表示
 ini_set('display_errors', 1);
 

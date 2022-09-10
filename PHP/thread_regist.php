@@ -1,5 +1,7 @@
 <?php
-
+require __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 // 新しいセッションを開始
 // リクエスト上で GET, POST またはクッキーにより渡された
 // セッション ID に基づき現在のセッションを復帰

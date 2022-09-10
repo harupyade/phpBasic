@@ -1,5 +1,7 @@
 <?php
-
+require __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 // 都道府県リスト取得
 require_once("./pref_list.php");
 
