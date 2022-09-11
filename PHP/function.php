@@ -134,49 +134,77 @@ function memberDataGet()
     return $get_data;
 }
 
-// 会員検索
-function memberDataGetSearch($id,$gender,$pref_name,$free_word)
+// 会員検索 -ボツ-
+// function memberDataGetSearch($id, $gender, $pref_name, $free_word)
+// {
+//     // DB接続
+//     $dbh = dbConnect();
+//     // SQL
+//     if (!empty($id) || !empty($gender) || !empty($pref_name) || !empty($free_word)) {
+//         $sql = "SELECT * FROM members";
+//         if (!empty($id)) {
+//             $sql .= " WHERE id=:id";
+//         }
+//         if (empty($id) && !empty($gender)) {
+//             $sql .= " WHERE gender=:gender";
+//         } elseif (!empty($gender)) {
+//             $sql .= " AND gender=:gender";
+//         }
+//         if (empty($id) && empty($gender) && !empty($pref_name) && $pref_name != "選択してください") {
+//             $sql .= " WHERE pref_name=:pref_name";
+//         } elseif (!empty($pref_name) && $pref_name != "選択してください") {
+//             $sql .= " AND pref_name=:pref_name";
+//         }
+//         if (empty($id) && empty($gender) && $pref_name == "選択してください" && !empty($free_word)) {
+//             $sql .= " WHERE (name_sei=:free_word OR name_mei=:free_word OR email=:free_word)";
+//         } elseif (!empty($free_word)) {
+//             $sql .= " AND (name_sei=:free_word OR name_mei=:free_word OR email=:free_word)";
+//         }
+//     }
+
+//     $stmt = $dbh->prepare($sql);
+
+//     if (!empty($id)) {
+//         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+//     }
+//     if (!empty($gender)) {
+//         $stmt->bindValue(':gender', $gender, PDO::PARAM_INT);
+//     }
+//     if (!empty($pref_name) && $pref_name != "選択してください") {
+//         $stmt->bindValue(':pref_name', $pref_name, PDO::PARAM_STR);
+//     }
+//     if (!empty($free_word)) {
+//         $stmt->bindValue(':free_word', $free_word, PDO::PARAM_STR);
+//     }
+
+//     $stmt->execute();
+//     $get_data = $stmt->fetchAll();
+//     return $get_data;
+// }
+
+// 会員検索 スマートver.
+function memberDataGetSearch2($id, $gender, $pref_name, $free_word)
 {
     // DB接続
     $dbh = dbConnect();
-    // SQL
-    if(!empty($id) || !empty($gender) || !empty($pref_name) || !empty($free_word)){
-        $sql = "SELECT * FROM members";
-        if(!empty($id)){
-            $sql.= " WHERE id=:id";
-        }
-        if(empty($id) && !empty($gender)){
-            $sql.=" WHERE gender=:gender";
-        }elseif(!empty($gender)){
-            $sql.=" AND gender=:gender";
-        }
-        if(empty($id) && empty($gender) && !empty($pref_name)&& $pref_name != "選択してください"){
-            $sql.=" WHERE pref_name=:pref_name";
-        }elseif(!empty($pref_name)&& $pref_name != "選択してください"){
-            $sql .= " AND pref_name=:pref_name";
-        }
-        if(empty($id) && empty($gender) && $pref_name == "選択してください" && !empty($free_word)){
-            $sql.=" WHERE (name_sei=:free_word OR name_mei=:free_word OR email=:free_word)";
-        }elseif(!empty($free_word)){
-            $sql.=" AND (name_sei=:free_word OR name_mei=:free_word OR email=:free_word)";
+    //SQL
+    $sql = "SELECT * FROM members WHERE";
+    $search_items = array(
+        'id' => "$id",
+        'gender' => "$gender",
+        'pref_name' => "$pref_name"
+    );
+    foreach ($search_items as $key => $value) {
+        if (!empty($value)) {
+            $sql .= ' '. $key .'="'. $value .'" AND';
         }
     }
     
-    $stmt = $dbh->prepare($sql);
-
-    if(!empty($id)){
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-    }
-    if(!empty($gender)){
-        $stmt->bindValue(':gender', $gender, PDO::PARAM_INT);
-    }
-    if(!empty($pref_name) && $pref_name != "選択してください"){
-        $stmt->bindValue(':pref_name', $pref_name, PDO::PARAM_STR);
-    }
     if(!empty($free_word)){
-        $stmt->bindValue(':free_word', $free_word, PDO::PARAM_STR);
+        $sql .= ' (name_sei="'.$free_word.'" OR name_mei="'.$free_word.'" OR email="'.$free_word.'" )';
     }
-
+    $sql = rtrim($sql,"AND");
+    $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $get_data = $stmt->fetchAll();
     return $get_data;
