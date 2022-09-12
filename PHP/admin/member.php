@@ -6,12 +6,12 @@ ini_set('display_errors', 1);
 
 // ここからこのファイルでの操作
 require_once("../pref_list.php");
-if(!empty($_POST["btn_confirm"])){
-    $get_data = memberDataGetSearch2((int)$_POST["id"],(int)$_POST["gender"],$_POST["pref_name"],$_POST["free_word"]);
-    if(empty($_POST["id"])&&empty($_POST["gender"])&&empty($_POST["pref_name"])&&empty($_POST["free_word"])){
+if (!empty($_POST["btn_confirm"])) {
+    $get_data = memberDataGetSearch2((int)$_POST["id"], (int)$_POST["gender"], $_POST["pref_name"], $_POST["free_word"]);
+    if (empty($_POST["id"]) && empty($_POST["gender"]) && empty($_POST["pref_name"]) && empty($_POST["free_word"])) {
         $get_data = memberDataGet();
     }
-}else{
+} else {
     $get_data = memberDataGet();
 }
 
@@ -26,6 +26,47 @@ if(!empty($_POST["btn_confirm"])){
 <head>
     <title>会員一覧ページ</title>
     <link rel="stylesheet" href="../CSS/form.css">
+    <script src="https://kit.fontawesome.com/88a524cdd2.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        // $(fuction(){
+        //     $("#id_order").toggle(
+        //         function(){
+        //             $(this).children('i').html("あ");
+        //         },ïïï
+        //         function(){
+        //             $(this).children('i').html("い");
+        //         }
+        //     );
+        // });
+
+
+        $(function() {
+
+            $("#id_order").click(function() {
+                    if ($(this).children('i').hasClass('fa-sort-up')) {
+                        $(this).children('i').removeClass("fa-sort-up");
+                        $(this).children('i').addClass("fa-sort-down");
+                    } else {
+                        $(this).children('i').removeClass("fa-sort-down");
+                        $(this).children('i').addClass("fa-sort-up");
+                    }
+                }
+            );
+
+            $("#created_order").click(function() {
+                    if ($(this).children('i').hasClass('fa-sort-up')) {
+                        $(this).children('i').removeClass("fa-sort-up");
+                        $(this).children('i').addClass("fa-sort-down");
+                    } else {
+                        $(this).children('i').removeClass("fa-sort-down");
+                        $(this).children('i').addClass("fa-sort-up");
+                    }
+                }
+            );
+
+        });
+    </script>
 </head>
 
 <body>
@@ -47,7 +88,7 @@ if(!empty($_POST["btn_confirm"])){
                 </tr>
                 <tr>
                     <td>性別</td>
-                    <td><label><input type="radio" name="gender" value="1" >男性</label><label><input type="radio" name="gender" value="2" >女性</label></td>
+                    <td><label><input type="radio" name="gender" value="1">男性</label><label><input type="radio" name="gender" value="2">女性</label></td>
                 </tr>
                 <tr>
                     <td>都道府県</td>
@@ -55,11 +96,11 @@ if(!empty($_POST["btn_confirm"])){
                             <?php
                             // foreachでpref_list.php内の$pref_listの中身を取り出し
                             foreach ($pref_list as $key => $value) {
-                                    if(empty($key)){
-                                        echo "<option value=''>" . $value . "</option>";
-                                    }else{
-                                        echo "<option value='$value'>" . $value . "</option>";
-                                    }
+                                if (empty($key)) {
+                                    echo "<option value=''>" . $value . "</option>";
+                                } else {
+                                    echo "<option value='$value'>" . $value . "</option>";
+                                }
                             }
                             ?>
                         </select></td>
@@ -69,16 +110,16 @@ if(!empty($_POST["btn_confirm"])){
                     <td><input type="text" name="free_word" value=""></td>
                 </tr>
             </table>
-            <input class="btn_blue" type="submit" name="btn_confirm" value="検索する" >
+            <input class="btn_blue" type="submit" name="btn_confirm" value="検索する">
         </form>
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th id="id_order">ID <i class="fa-solid fa-sort-up"></i></th>
                     <th>氏名</th>
                     <th>性別</th>
                     <th>住所</th>
-                    <th>登録日時</th>
+                    <th id="created_order">登録日時 <i class="fa-solid fa-sort-up"></i></th>
                 </tr>
             </thead>
             <tbody>
