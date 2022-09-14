@@ -4,58 +4,72 @@ require_once("../function.php");
 session_start();
 ini_set('display_errors', 1);
 
-//session_unset();
 // ここからこのファイルでの操作
 require_once("../pref_list.php");
+
+//検索するを押された場合
 if (!empty($_POST["btn_confirm"])) {
-    // $_SESSION["sql"]に sql文を代入
-    $_SESSION["sql"] = memberDataGetSearch2((int)$_POST["id"], (int)$_POST["gender"], $_POST["pref_name"], $_POST["free_word"]);
-    // $_SESSION["get_data"] = $get_data;
+    // もし検索を押されたときに全部空だった場合
     if (empty($_POST["id"]) && empty($_POST["gender"]) && empty($_POST["pref_name"]) && empty($_POST["free_word"])) {
-        $_SESSION["sql"] = "SELECT * FROM members";
+        $sql_search = "SELECT * FROM members";
+    } else {
+        // もしどれか1つでも値が入っていた場合
+        $sql_search = memberDataGetSearch2((int)$_POST["id"], (int)$_POST["gender"], $_POST["pref_name"], $_POST["free_word"]);
     }
-    $get_data = sqlSearch($_SESSION["sql"]);
+    setcookie('sql_search', "$sql_search", time() + 60 * 60 * 24);
+    $get_data = sqlSearch($sql_search);
 }
-// else {
-//     $_SESSION["sql"] = "SELECT * FROM members";
-//     $get_data = sqlSearch($_SESSION["sql"]);
-// }
 
+// IDの並び替えを押された場合
+if (!empty($_POST["id_order"])) {
+    // もしすでにID並び替えボタンが押されていた場合
+    if (isset($_COOKIE["id_order"]) && !empty($_COOKIE["id_order"])) {
+        // もしすでに入ってるのがASCの場合COOKIEにDESCをセット
+        if ($_COOKIE["id_order"] == " ORDER BY id ASC") {
+            setcookie('id_order', " ORDER BY id DESC", time() + 60 * 60 * 24);
+        } elseif ($_COOKIE["id_order"] == " ORDER BY id DESC") {
+            setcookie('id_order', " ORDER BY id ASC", time() + 60 * 60 * 24);
+        }
+    } // ID並び替えボタンを初めて押された場合
+    else {
+        setcookie('id_order', " ORDER BY id DESC", time() + 60 * 60 * 24);
+    }
 
-
-// $sql の値を代入
-// idの並び替えボタンを押した時でかつ$_SESSION["id_order"]のセットがされている時交互に入れ替え
-if (!empty($_POST["id_order"]) && isset($_SESSION["id_order"]) && !empty($_SESSION["id_order"] == "ASC")) {
-    $_SESSION["id_order"] = "DESC";
-    $sql = $_SESSION["sql"] . " ORDER BY id DESC";
+    $sql = $_COOKIE["sql_search"] . $_COOKIE["id_order"];
     $get_data = sqlSearch($sql);
-} elseif (!empty($_POST["id_order"]) && $_SESSION["id_order"] == "DESC") {
-    $_SESSION["id_order"] = "ASC";
-    $sql = $_SESSION["sql"] . " ORDER BY id ASC";
-    $get_data = sqlSearch($sql);
+} // IDの並び替えを押されていないときにセット
+else {
+    setcookie('id_order', " ORDER BY id ASC", time() + 60 * 60 * 24);
 }
-// if (!empty($_POST["created_order"]) && isset($_SESSION["created_order"]) && !empty($_SESSION["created_order"] == "ASC")) {
-//     $_SESSION["created_order"] = "DESC";
-//     $sql = $_SESSION["sql"] . " ORDER BY created_at DESC";
-//     $get_data = sqlSearch($sql);
-// } elseif (!empty($_POST["created_order"])  && $_SESSION["created_order"] == "DESC") {
-//     $_SESSION["created_order"] = "ASC";
-//     $sql = $_SESSION["sql"] . " ORDER BY created_at ASC";
-//     $get_data = sqlSearch($sql);
-// }
-// else{
-//     $_SESSION["id_order"] = "DESC";
-//     $sql = $_SESSION["sql"]." ORDER BY id DESC"; 
-// }
 
-if (empty($_POST)) {
+// 登録日時の並び替えを押された場合
+if (!empty($_POST["created_order"])) {
+    // もしすでにID並び替えボタンが押されていた場合
+    if (isset($_COOKIE["created_order"]) && !empty($_COOKIE["created_order"])) {
+        // もしすでに入ってるのがASCの場合COOKIEにDESCをセット
+        if ($_COOKIE["created_order"] == " ORDER BY created_at ASC") {
+            setcookie('created_order', " ORDER BY created_at DESC", time() + 60 * 60 * 24);
+        } elseif ($_COOKIE["created_order"] == " ORDER BY created_at DESC") {
+            setcookie('created_order', " ORDER BY created_at ASC", time() + 60 * 60 * 24);
+        }
+    } // ID並び替えボタンを初めて押された場合
+    else {
+        setcookie('created_order', " ORDER BY created_at DESC", time() + 60 * 60 * 24);
+    }
+    $sql = $_COOKIE["sql_search"] . $_COOKIE["created_order"];
+    $get_data = sqlSearch($sql);
+} // 登録日時の並び替えを押されていないときにセット
+else {
+    setcookie('created_order', " ORDER BY created_at ASC", time() + 60 * 60 * 24);
+}
+
+// 何も押されていない場合のセット
+if(empty($_POST["btn_confirm"]) && empty($_POST["id_order"]) && empty($_POST["created_order"])){
     $sql = "SELECT * FROM members";
     $get_data = sqlSearch($sql);
 }
 
-
-//echo $_SESSION["id_order"];
-var_dump($_SESSION);
+var_dump($_COOKIE);
 //echo $sql;
 //echo $get_data;
 //var_dump($get_data);
@@ -69,44 +83,6 @@ var_dump($_SESSION);
     <title>会員一覧ページ</title>
     <link rel="stylesheet" href="../CSS/form.css">
     <script src="https://kit.fontawesome.com/88a524cdd2.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        // $(fuction(){
-        //     $("#id_order").toggle(
-        //         function(){
-        //             $(this).children('i').html("あ");
-        //         },ïïï
-        //         function(){
-        //             $(this).children('i').html("い");
-        //         }
-        //     );
-        // });
-
-
-        // $(function() {
-
-        //     $("#id_order").click(function() {
-        //         if ($(this).children('i').hasClass('fa-sort-up')) {
-        //             $(this).children('i').removeClass("fa-sort-up");
-        //             $(this).children('i').addClass("fa-sort-down");
-        //         } else {
-        //             $(this).children('i').removeClass("fa-sort-down");
-        //             $(this).children('i').addClass("fa-sort-up");
-        //         }
-        //     });
-
-        //     $("#created_order").click(function() {
-        //         if ($(this).children('i').hasClass('fa-sort-up')) {
-        //             $(this).children('i').removeClass("fa-sort-up");
-        //             $(this).children('i').addClass("fa-sort-down");
-        //         } else {
-        //             $(this).children('i').removeClass("fa-sort-down");
-        //             $(this).children('i').addClass("fa-sort-up");
-        //         }
-        //     });
-
-        // });
-    </script>
 </head>
 
 <body>
@@ -157,9 +133,14 @@ var_dump($_SESSION);
                 <tr>
                     <form action="" method="post">
                         <th id="id_order">ID
-                            <?php if ($_SESSION["id_order"] == "ASC") : ?>
-                                <input type="submit" name="id_order" value="△" style="background-color: transparent; outline: none; border:none;">
-                            <?php elseif (empty($_POST["id_order"]) || $_SESSION["id_order"] == "DESC") : ?>
+                            <!-- もしもクッキーに値が入っていた場合 -->
+                            <?php if (isset($_COOKIE["id_order"]) && !empty($_COOKIE["id_order"])) : ?>
+                                <?php if ($_COOKIE["id_order"] == " ORDER BY id ASC") : ?>
+                                    <input type="submit" name="id_order" value="△" style="background-color: transparent; outline: none; border:none;">
+                                <?php elseif ($_COOKIE["id_order"] == " ORDER BY id DESC") : ?>
+                                    <input type="submit" name="id_order" value="▽" style="background-color: transparent; outline: none; border:none;">
+                                <?php endif ?>
+                            <?php else : ?>
                                 <input type="submit" name="id_order" value="▽" style="background-color: transparent; outline: none; border:none;">
                             <?php endif ?>
                         </th>
@@ -169,9 +150,14 @@ var_dump($_SESSION);
                     <th>住所</th>
                     <form action="" method="post">
                         <th id="created_order">登録日時
-                            <?php if ( $_SESSION["created_order"] == "ASC") : ?>
-                                <input type="submit" name="created_order" value="△" style="background-color: transparent; outline: none; border:none;">
-                            <?php elseif (empty($_POST["created_order"]) || $_SESSION["created_order"] == "DESC") : ?>
+                            <!-- もしもクッキーに値が入っていた場合 -->
+                            <?php if (isset($_COOKIE["created_order"]) && !empty($_COOKIE["created_order"])) : ?>
+                                <?php if ($_COOKIE["created_order"] == " ORDER BY created_at ASC") : ?>
+                                    <input type="submit" name="created_order" value="△" style="background-color: transparent; outline: none; border:none;">
+                                <?php elseif ($_COOKIE["created_order"] == " ORDER BY created_at DESC") : ?>
+                                    <input type="submit" name="created_order" value="▽" style="background-color: transparent; outline: none; border:none;">
+                                <?php endif ?>
+                            <?php else : ?>
                                 <input type="submit" name="created_order" value="▽" style="background-color: transparent; outline: none; border:none;">
                             <?php endif ?>
                         </th>
