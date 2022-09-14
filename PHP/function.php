@@ -131,7 +131,7 @@ function memberDataGet()
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $get_data = $stmt->fetchAll();
-    return $get_data;
+    return array($get_data,$sql);
 }
 
 // 会員検索 -ボツ-
@@ -201,9 +201,20 @@ function memberDataGetSearch2($id, $gender, $pref_name, $free_word)
     }
     
     if(!empty($free_word)){
-        $sql .= ' (name_sei="'.$free_word.'" OR name_mei="'.$free_word.'" OR email="'.$free_word.'" )';
+        $sql .= ' (name_sei LIKE "%'.$free_word.'%" OR name_mei LIKE "%'.$free_word.'%" OR email LIKE "%'.$free_word.'%" )';
     }
     $sql = rtrim($sql,"AND");
+    // $stmt = $dbh->prepare($sql);
+    // $stmt->execute();
+    // $get_data = $stmt->fetchAll();
+    return $sql;
+}
+
+// SQL文を取り出して実行
+function sqlSearch($sql){
+    // DB接続
+    $dbh = dbConnect();
+    //SQL実行
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $get_data = $stmt->fetchAll();

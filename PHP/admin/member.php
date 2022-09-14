@@ -4,17 +4,59 @@ require_once("../function.php");
 session_start();
 ini_set('display_errors', 1);
 
+//session_unset();
 // ここからこのファイルでの操作
 require_once("../pref_list.php");
 if (!empty($_POST["btn_confirm"])) {
-    $get_data = memberDataGetSearch2((int)$_POST["id"], (int)$_POST["gender"], $_POST["pref_name"], $_POST["free_word"]);
+    // $_SESSION["sql"]に sql文を代入
+    $_SESSION["sql"] = memberDataGetSearch2((int)$_POST["id"], (int)$_POST["gender"], $_POST["pref_name"], $_POST["free_word"]);
+    // $_SESSION["get_data"] = $get_data;
     if (empty($_POST["id"]) && empty($_POST["gender"]) && empty($_POST["pref_name"]) && empty($_POST["free_word"])) {
-        $get_data = memberDataGet();
+        $_SESSION["sql"] = "SELECT * FROM members";
     }
-} else {
-    $get_data = memberDataGet();
+    $get_data = sqlSearch($_SESSION["sql"]);
+}
+// else {
+//     $_SESSION["sql"] = "SELECT * FROM members";
+//     $get_data = sqlSearch($_SESSION["sql"]);
+// }
+
+
+
+// $sql の値を代入
+// idの並び替えボタンを押した時でかつ$_SESSION["id_order"]のセットがされている時交互に入れ替え
+if (!empty($_POST["id_order"]) && isset($_SESSION["id_order"]) && !empty($_SESSION["id_order"] == "ASC")) {
+    $_SESSION["id_order"] = "DESC";
+    $sql = $_SESSION["sql"] . " ORDER BY id DESC";
+    $get_data = sqlSearch($sql);
+} elseif (!empty($_POST["id_order"]) && $_SESSION["id_order"] == "DESC") {
+    $_SESSION["id_order"] = "ASC";
+    $sql = $_SESSION["sql"] . " ORDER BY id ASC";
+    $get_data = sqlSearch($sql);
+}
+// if (!empty($_POST["created_order"]) && isset($_SESSION["created_order"]) && !empty($_SESSION["created_order"] == "ASC")) {
+//     $_SESSION["created_order"] = "DESC";
+//     $sql = $_SESSION["sql"] . " ORDER BY created_at DESC";
+//     $get_data = sqlSearch($sql);
+// } elseif (!empty($_POST["created_order"])  && $_SESSION["created_order"] == "DESC") {
+//     $_SESSION["created_order"] = "ASC";
+//     $sql = $_SESSION["sql"] . " ORDER BY created_at ASC";
+//     $get_data = sqlSearch($sql);
+// }
+// else{
+//     $_SESSION["id_order"] = "DESC";
+//     $sql = $_SESSION["sql"]." ORDER BY id DESC"; 
+// }
+
+if (empty($_POST)) {
+    $sql = "SELECT * FROM members";
+    $get_data = sqlSearch($sql);
 }
 
+
+//echo $_SESSION["id_order"];
+var_dump($_SESSION);
+//echo $sql;
 //echo $get_data;
 //var_dump($get_data);
 //var_dump($_POST);
@@ -41,31 +83,29 @@ if (!empty($_POST["btn_confirm"])) {
         // });
 
 
-        $(function() {
+        // $(function() {
 
-            $("#id_order").click(function() {
-                    if ($(this).children('i').hasClass('fa-sort-up')) {
-                        $(this).children('i').removeClass("fa-sort-up");
-                        $(this).children('i').addClass("fa-sort-down");
-                    } else {
-                        $(this).children('i').removeClass("fa-sort-down");
-                        $(this).children('i').addClass("fa-sort-up");
-                    }
-                }
-            );
+        //     $("#id_order").click(function() {
+        //         if ($(this).children('i').hasClass('fa-sort-up')) {
+        //             $(this).children('i').removeClass("fa-sort-up");
+        //             $(this).children('i').addClass("fa-sort-down");
+        //         } else {
+        //             $(this).children('i').removeClass("fa-sort-down");
+        //             $(this).children('i').addClass("fa-sort-up");
+        //         }
+        //     });
 
-            $("#created_order").click(function() {
-                    if ($(this).children('i').hasClass('fa-sort-up')) {
-                        $(this).children('i').removeClass("fa-sort-up");
-                        $(this).children('i').addClass("fa-sort-down");
-                    } else {
-                        $(this).children('i').removeClass("fa-sort-down");
-                        $(this).children('i').addClass("fa-sort-up");
-                    }
-                }
-            );
+        //     $("#created_order").click(function() {
+        //         if ($(this).children('i').hasClass('fa-sort-up')) {
+        //             $(this).children('i').removeClass("fa-sort-up");
+        //             $(this).children('i').addClass("fa-sort-down");
+        //         } else {
+        //             $(this).children('i').removeClass("fa-sort-down");
+        //             $(this).children('i').addClass("fa-sort-up");
+        //         }
+        //     });
 
-        });
+        // });
     </script>
 </head>
 
@@ -115,11 +155,27 @@ if (!empty($_POST["btn_confirm"])) {
         <table>
             <thead>
                 <tr>
-                    <th id="id_order">ID <i class="fa-solid fa-sort-up"></i></th>
+                    <form action="" method="post">
+                        <th id="id_order">ID
+                            <?php if ($_SESSION["id_order"] == "ASC") : ?>
+                                <input type="submit" name="id_order" value="△" style="background-color: transparent; outline: none; border:none;">
+                            <?php elseif (empty($_POST["id_order"]) || $_SESSION["id_order"] == "DESC") : ?>
+                                <input type="submit" name="id_order" value="▽" style="background-color: transparent; outline: none; border:none;">
+                            <?php endif ?>
+                        </th>
+                    </form>
                     <th>氏名</th>
                     <th>性別</th>
                     <th>住所</th>
-                    <th id="created_order">登録日時 <i class="fa-solid fa-sort-up"></i></th>
+                    <form action="" method="post">
+                        <th id="created_order">登録日時
+                            <?php if ( $_SESSION["created_order"] == "ASC") : ?>
+                                <input type="submit" name="created_order" value="△" style="background-color: transparent; outline: none; border:none;">
+                            <?php elseif (empty($_POST["created_order"]) || $_SESSION["created_order"] == "DESC") : ?>
+                                <input type="submit" name="created_order" value="▽" style="background-color: transparent; outline: none; border:none;">
+                            <?php endif ?>
+                        </th>
+                    </form>
                 </tr>
             </thead>
             <tbody>
